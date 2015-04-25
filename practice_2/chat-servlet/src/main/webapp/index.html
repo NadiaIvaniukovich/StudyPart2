@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Chat</title>
+</head>
+
+	<link rel="stylesheet" type="text/css" href="resources/css/style.css" />
+	<script src="resources/js/scripts.js"></script>
+
+<body onLoad="run();">
+
+<section class="chat">
+<div id="output">
+</div>
+<div class="right-panel">
+
+		Добро пожаловать, <span class="nickname">Гость</span>.
+    
+	<form style="margin-top:5px">
+		<input id="name-input" type="text" placeholder="Введите имя"><br>
+		<input class="button17 change-name" type="button" value="Сменить имя" style="margin-top:5px;">
+	</form>
+    
+    <div id="status-message">
+    	Сервер доступен.
+    </div>
+</div>
+
+<div class="chating">
+	<div class="history">
+		<ul id="msgHis" style="list-style-type:none">
+            <!--<li>            
+				<input class="button15" type="button" value="Редактировать">
+				<input class="button15" type="button" value="Удалить">
+            	<div>Здесь будут выводиться сообщения</div>
+			</li>-->
+		</ul>
+        <div>
+        </div>
+	</div>
+    
+	<div class="chat-input">
+		<form>
+			<input class="button17 send-msg" type="button" value="Отправить">
+            <div class="message">
+				<input type="text" class="msg-input" placeholder="Введите сообщение">
+            </div>
+		</form>
+	</div>
+</div>
+
+</section>
+
+<footer> </footer>
+</body>
+</html>

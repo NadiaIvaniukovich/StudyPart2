@@ -1,0 +1,146 @@
+html{
+	margin:0;
+	padding:0;
+}
+
+body{
+	background-color:#070825;
+	font-family:Tahoma, Geneva, sans-serif;
+	/*background-image:url(04.jpg);*/
+	margin:0;
+	padding:0;
+}
+
+section{
+	background-color:rgba(69, 68, 77, 0.71);
+	min-width:650px;
+	min-height:230px;
+	position:absolute;
+	top:5%;
+	right:5%;
+	left:5%;
+	bottom:5%
+}
+
+.right-panel{
+	float:right;
+	color:#CCCCCC;
+	width:190px;
+	padding:5px;
+}
+#status-message{
+	margin-top:60px;
+}
+.chating{
+	position:absolute;
+	right:200px;
+	left:0;
+	bottom:0;
+	top:0
+	}
+
+.chating > div{
+	background-color:#DBDADA;
+	width:auto;
+	position:absolute;
+	left:15px;
+	right:15px;
+}
+
+.history{
+	position:absolute;
+	top:10px;
+	bottom:66px;
+	
+	}
+.history ul{
+	padding:0;
+	position:absolute;
+	bottom:0;
+	left:0;
+	right:0;
+	overflow-y:auto;
+	max-height:100%;
+	margin:0;
+}
+.history ul li{
+	padding:10px;
+	}
+.chat-input{
+	bottom:10px;
+	height:30px;
+	padding:8px 15px 5px;
+}
+.chat-input .button17{
+	float:right;
+}
+.chat-input .message{
+	position:absolute;
+	right:110px;
+	left:10px;
+}
+.chat-input .message input{
+	width:100%;
+}
+li{
+	margin-top:5px;
+	padding:5px;
+}
+.edit-text{
+	color:#666666;
+}
+.button15 {
+  display: inline-block;
+  font-family: arial,sans-serif;
+  font-size: 9px;
+  font-weight: bold;
+  color: rgb(68,68,68);
+  text-decoration: none;
+  user-select: none;
+  padding: .2em 1.2em;
+  outline: none;
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 2px;
+  background: rgb(245,245,245) linear-gradient(#f4f4f4, #f1f1f1);
+  transition: all .218s ease 0s;
+  float:right
+}
+.button15:hover {
+  color: rgb(24,24,24);
+  border: 1px solid rgb(198,198,198);
+  background: #f7f7f7 linear-gradient(#f7f7f7, #f1f1f1);
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+.button15:active {
+  color: rgb(51,51,51);
+  border: 1px solid rgb(204,204,204);
+  background: rgb(238,238,238) linear-gradient(rgb(238,238,238), rgb(224,224,224));
+  box-shadow: 0 1px 2px rgba(0,0,0,.1) inset;
+}
+
+.button17 {
+  display: inline-block;
+  font-family: arial,sans-serif;
+  font-size: 11px;
+  color: rgb(205,216,228);
+  text-shadow: 0 -1px rgb(46,53,58);
+  text-decoration: none;
+  user-select: none;
+  line-height: 2em;
+  padding: 1px 1.2em;
+  outline: none;
+  border: 1px solid rgba(33,43,52,1);
+  border-radius: 3px;
+  background: rgb(81,92,102) linear-gradient(rgb(81,92,102), rgb(69,78,87));
+  box-shadow:
+   inset 0 1px rgba(101,114,126,1),
+   inset 0 0 1px rgba(140,150,170,.8),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+}
+.button17:active {
+  box-shadow:
+   inset 0 1px 3px rgba(0,10,20,.5),
+   0 1px rgb(83,94,104),
+   0 0 1px rgb(86,96,106);
+}
