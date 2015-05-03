@@ -11,10 +11,7 @@ public class Message {
     private String text;
     private String date;
 
-    public Message(){
-        Double number = Math.random() * 10101;
-        this.id = number.toString();
-    }
+    public Message(){}
 
     public Message(String id, String author, String text, String date) {
         this.id = id;
@@ -55,6 +52,24 @@ public class Message {
         this.author = author;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if(!(obj instanceof Message))
+            return false;
+        Message other = (Message) obj;
+        if (!id.equals(other.getId()))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode(){
+        return id.hashCode();
+    }
     public String toString() {
         return "{\"id\":\"" + this.id + "\",\"author\":\"" + this.author + "\",\"text\":\"" + this.text + "\"}";
     }

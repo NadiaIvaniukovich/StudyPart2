@@ -1,12 +1,34 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><messages>
-    <message>
-        <author>Tyler</author>
-        <text>Hello</text>
-        <date>04-03-12 19:56</date>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<messages>
+
+
+
+
+
+<message id="19751849155">
+        <author>Nik</author>
+        <text>hi</text>
+        <date>03-05-2015 14:43</date>
     </message>
-    <message>
-        <author>Tylii</author>
-        <text>Hey</text>
-        <date>04-03-12 19:58</date>
+
+
+
+<message id="420813468094">
+        <author>Marry</author>
+        <text>Hello)</text>
+        <date>03-05-2015 14:49</date>
     </message>
-<message><author>Mary</author><text>Something</text><date>24-13-2015 20:13</date></message><message><author>Mary</author><text>:)</text><date>25-36-2015 15:36</date></message></messages>
+<message id="3857576167">
+        <author>Nik</author>
+        <text>How are you?</text>
+        <date>03-05-2015 14:49</date>
+    </message>
+
+
+
+<message id="98369030305">
+        <author>Marry</author>
+        <text>Good</text>
+        <date>03-05-2015 14:50</date>
+    </message>
+</messages>

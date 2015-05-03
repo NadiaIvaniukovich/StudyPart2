@@ -26,6 +26,10 @@ public final class MessageStorage {
         INSTANSE.addAll(Arrays.asList(messages));
     }
 
+    public static void deleteMessage(Message message){
+        INSTANSE.remove(message);
+    }
+
     public static int getSize() {
         return INSTANSE.size();
     }

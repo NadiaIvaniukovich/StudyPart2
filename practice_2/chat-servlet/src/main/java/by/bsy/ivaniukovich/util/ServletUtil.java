@@ -8,7 +8,7 @@ import java.io.IOException;
  * Created by Hope on 4/24/2015.
  */
 public final class ServletUtil {
-    public static final String APPLICATION_JSON = "application/json";
+    public static final String APPLICATION_JSON = "application/json; charset=UTF-8";
 
     private ServletUtil() {
     }

@@ -14,12 +14,13 @@ import java.util.Date;
 public class MessageUtil {
     public static final String TOKEN = "token";
     public static final String MESSAGES = "messages";
+    public static final String INVALIDATE_TOKEN = "invalidateToken";
     private static final String TN = "TN";
     private static final String EN = "EN";
     private static final String ID = "id";
     private static final String AUTHOR = "author";
     private static final String TEXT = "text";
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-mm-yyyy HH:mm");
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     private MessageUtil() {
     }

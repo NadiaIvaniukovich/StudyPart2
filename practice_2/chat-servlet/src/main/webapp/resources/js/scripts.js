@@ -117,9 +117,7 @@ function onSendButtonClick(){
 }
 
 function addMessage(message) {
-	post(appState.mainUrl, JSON.stringify(message),function(){
-        restoreHistory();
-    });
+	post(appState.mainUrl, JSON.stringify(message));
 }
 
 var messageText;
@@ -220,7 +218,7 @@ function storeName(name) {
 	localStorage.setItem("Nickname", JSON.stringify(name));
 }
 
-function restoreHistory(continueWith) {
+function restoreHistory() {
 	var url = appState.mainUrl + '?token=' + appState.token;
 
 	get(url, function(responseText) {
@@ -228,10 +226,17 @@ function restoreHistory(continueWith) {
 
         var response = JSON.parse(responseText);
 
-        appState.token = response.token;
-        createAllMessages(response.messages);
+        if (response.invalidateToken) {
+            clear();
+        } else {
+            appState.token = response.token;
+            createAllMessages(response.messages);
+        }
 
-        continueWith && continueWith();
+        restoreHistory();
+    }, function(message){
+        defaultErrorHandler(message);
+        restoreHistory();
     });
 }
 
