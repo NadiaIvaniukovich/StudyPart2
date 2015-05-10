@@ -221,22 +221,25 @@ function storeName(name) {
 function restoreHistory() {
 	var url = appState.mainUrl + '?token=' + appState.token;
 
-	get(url, function(responseText) {
-        console.assert(responseText != null);
+	get(url, function(responseText,xhr) {
+        if(xhr.status == 200) {
+            console.assert(responseText != null);
 
-        var response = JSON.parse(responseText);
+            var response = JSON.parse(responseText);
 
-        if (response.invalidateToken) {
-            clear();
-        } else {
+            /*if (response.invalidateToken) {
+             clear();
+             } else {*/
             appState.token = response.token;
             createAllMessages(response.messages);
+            //}
         }
-
-        restoreHistory();
+        //restoreHistory();
+        setTimeout(restoreHistory,1000);
     }, function(message){
         defaultErrorHandler(message);
-        restoreHistory();
+        setTimeout(restoreHistory,1000);
+        //restoreHistory();
     });
 }
 
@@ -308,10 +311,11 @@ function ajax(method, url, data, continueWith, continueWithError) {
 		if (xhr.readyState !== 4)
 			return;
 
-		if(xhr.status != 200) {
+		if(xhr.status != 200 && xhr.status != 304) {
 			continueWithError('Error on the server side, response ' + xhr.status);
 			return;
 		}
+
 
 		if(isError(xhr.responseText)) {
 			continueWithError('Error on the server side, response ' + xhr.responseText);
@@ -320,7 +324,7 @@ function ajax(method, url, data, continueWith, continueWithError) {
 
 
         output("Сервер доступен.");
-		continueWith && continueWith(xhr.responseText);
+		continueWith && continueWith(xhr.responseText,xhr);
 	};    
 
     xhr.ontimeout = function () {

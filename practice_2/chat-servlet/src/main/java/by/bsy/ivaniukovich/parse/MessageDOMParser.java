@@ -3,7 +3,6 @@ package by.bsy.ivaniukovich.parse;
 import by.bsy.ivaniukovich.model.Message;
 import org.w3c.dom.*;
 
-import by.bsy.ivaniukovich.model.MessageStorage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -16,6 +15,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Hope on 4/24/2015.
@@ -27,7 +29,6 @@ public class MessageDOMParser {
 
     public void write(Message message) throws  Exception {
         synchronized (lock) {
-            MessageStorage.addMessage(message);
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -60,34 +61,35 @@ public class MessageDOMParser {
     }
 
     public void deleteMessage(Message message) throws  Exception {
-        MessageStorage.deleteMessage(message);
+        synchronized (lock) {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document document = docBuilder.parse(new FileInputStream(filePath));
 
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document document = docBuilder.parse(new FileInputStream(filePath));
-
-        XPath xPath =  XPathFactory.newInstance().newXPath();
-        String expression="//message[@id='"+message.getId()+"']";
-        Node node = (Node) xPath.compile(expression).evaluate(document, XPathConstants.NODE);
-        if(node != null){
-            Node messages = document.getFirstChild();
-            messages.removeChild(node);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = "//message[@id='" + message.getId() + "']";
+            Node node = (Node) xPath.compile(expression).evaluate(document, XPathConstants.NODE);
+            if (node != null) {
+                Node messages = document.getFirstChild();
+                messages.removeChild(node);
+            }
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File(filePath));
+            transformer.transform(source, result);
         }
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new File(filePath));
-        transformer.transform(source, result);
-
     }
-    public void parse() throws  Exception {
+
+    public List<Message> parse(int index) throws  Exception {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(new File(filePath));
         NodeList nodeList = document.getElementsByTagName("message");
-        for (int i = 0; i < nodeList.getLength(); i++) {
+        List<Message> messages = Collections.synchronizedList(new ArrayList<Message>());
+        for (int i = index; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node instanceof Element) {
                 Message message = new Message();
@@ -98,9 +100,39 @@ public class MessageDOMParser {
                 message.setText(eElement.getElementsByTagName("text").item(0).getTextContent());
                 message.setDate(eElement.getElementsByTagName("date").item(0).getTextContent());
                 System.out.println(message.getDate() + " " + message.getAuthor() + " : " + message.getText());
-                MessageStorage.addMessage(message);
+                messages.add(message);
             }
         }
+        return messages;
+    }
 
+    public void changeMessage(Message message) throws  Exception {
+        synchronized (lock) {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document document = docBuilder.parse(new FileInputStream(filePath));
+
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String expression = "//message[@id='" + message.getId() + "']";
+            Element messageElement = (Element) xPath.compile(expression).evaluate(document, XPathConstants.NODE);
+            if (messageElement != null) {
+                messageElement.getElementsByTagName("text").item(0).setTextContent(message.getText());
+            }
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File(filePath));
+            transformer.transform(source, result);
+        }
+    }
+
+    public int size() throws  Exception {
+       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+       DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+       Document document = documentBuilder.parse(new File(filePath));
+       NodeList nodeList = document.getElementsByTagName("message");
+       return  nodeList.getLength();
     }
 }

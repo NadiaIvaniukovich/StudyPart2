@@ -3,7 +3,6 @@ package by.bsy.ivaniukovich.controller;
 import by.bsy.ivaniukovich.parse.MessageDOMParser;
 import org.apache.log4j.Logger;
 import by.bsy.ivaniukovich.model.Message;
-import by.bsy.ivaniukovich.model.MessageStorage;
 import by.bsy.ivaniukovich.util.ServletUtil;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import static by.bsy.ivaniukovich.util.MessageUtil.*;
 
@@ -36,18 +34,33 @@ public class MessageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //logger.info("doGet");
-        String token = request.getParameter(TOKEN);
-        //logger.info("Token " + token);
+        //logger.debug("doGet");
+        String token = request.getParameter("token");
+        //logger.debug("Token " + token);
 
         if (token != null && !"".equals(token)) {
             int index = getIndex(token);
-            //logger.info("Index " + index);
-            String messages = formResponse(index);
-            response.setContentType(ServletUtil.APPLICATION_JSON);
-            PrintWriter out = response.getWriter();
-            out.print(messages);
-            out.flush();
+            //logger.debug("Index " + index);
+
+            try {
+                if(index < domParser.size()){
+                    String messages = null;
+                    try {
+                        messages = formResponse(index);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    response.setContentType(ServletUtil.APPLICATION_JSON);
+                    PrintWriter out = response.getWriter();
+                    out.print(messages);
+                    out.flush();
+
+                } else {
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "'token' parameter needed");
         }
@@ -55,13 +68,12 @@ public class MessageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //logger.info("doPost");
+        logger.info("doPost");
         String data = ServletUtil.getMessageBody(request);
-        //logger.info(data);
+        logger.info(data);
         try {
             JSONObject json = stringToJson(data);
             Message message = jsonToMessage(json);
-            System.out.println(message.getDate() + " " + message.getAuthor() + " : " + message.getText());
             domParser.write(message);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (ParseException e) {
@@ -73,8 +85,27 @@ public class MessageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        logger.info("doPut");
         String data = ServletUtil.getMessageBody(request);
+        logger.info(data);
+        try {
+            JSONObject json = stringToJson(data);
+            Message message = jsonToMessage(json);
+            domParser.changeMessage(message);
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (ParseException e) {
+            logger.error(e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        logger.info("doDelete");
+        String data = ServletUtil.getMessageBody(request);
+        logger.info(data);
         try {
             JSONObject json = stringToJson(data);
             Message message = jsonToMessage(json);
@@ -90,30 +121,30 @@ public class MessageServlet extends HttpServlet {
 
 
     @SuppressWarnings("unchecked")
-    private String formResponse(int index) {
-        while (index == MessageStorage.getSize()) {
+    private String formResponse(int index) throws Exception {
+        /*while (index == domParser.size()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 break;
             }
-        }
+        }*/
 
         JSONObject jsonObject = new JSONObject();
-        if (index < MessageStorage.getSize()) {
+        //if (index < domParser.size()) {
             // new message added
-            jsonObject.put(MESSAGES, MessageStorage.getSubMessagesByIndex(index));
-            jsonObject.put(TOKEN, getToken(MessageStorage.getSize()));
-        } else {
+            jsonObject.put("messages", domParser.parse(index));
+            jsonObject.put("token", getToken(domParser.size()));
+        //} else {
             // message was removed, tell client to reload whole list
-            jsonObject.put(INVALIDATE_TOKEN, true);
-        }
+            //jsonObject.put("invalidateToken", true);
+        //}
         return jsonObject.toJSONString();
     }
 
     private void addStubData(){
         try {
-            domParser.parse();
+            domParser.parse(0);
         } catch (Exception e) {
             e.printStackTrace();
         }

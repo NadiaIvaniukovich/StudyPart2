@@ -15,7 +15,7 @@
 
 <message id="420813468094">
         <author>Marry</author>
-        <text>Hello)</text>
+        <text>Hello</text>
         <date>03-05-2015 14:49</date>
     </message>
 <message id="3857576167">
@@ -26,9 +26,34 @@
 
 
 
-<message id="98369030305">
+
+
+
+<message id="940269075782">
         <author>Marry</author>
-        <text>Good</text>
-        <date>03-05-2015 14:50</date>
+        <text>Good. And you?</text>
+        <date>09-05-2015 12:04</date>
     </message>
+
+
+
+
+
+<message id="498804453905">
+        <author>Nik</author>
+        <text>Me too</text>
+        <date>10-05-2015 13:11</date>
+    </message>
+
+<message id="480574494">
+        <author>Nik</author>
+        <text>Lol</text>
+        <date>10-05-2015 13:13</date>
+    </message>
+<message id="462589797675">
+        <author>Nik</author>
+        <text>That's nice</text>
+        <date>10-05-2015 13:13</date>
+    </message>
+
 </messages>

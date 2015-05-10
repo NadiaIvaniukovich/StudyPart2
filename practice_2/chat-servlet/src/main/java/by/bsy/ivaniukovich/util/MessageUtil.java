@@ -12,14 +12,6 @@ import java.util.Date;
  * Created by Hope on 4/24/2015.
  */
 public class MessageUtil {
-    public static final String TOKEN = "token";
-    public static final String MESSAGES = "messages";
-    public static final String INVALIDATE_TOKEN = "invalidateToken";
-    private static final String TN = "TN";
-    private static final String EN = "EN";
-    private static final String ID = "id";
-    private static final String AUTHOR = "author";
-    private static final String TEXT = "text";
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     private MessageUtil() {
@@ -27,7 +19,7 @@ public class MessageUtil {
 
     public static String getToken(int index) {
         Integer number = index * 8 + 11;
-        return TN + number + EN;
+        return "TN" + number + "EN";
     }
 
     public static int getIndex(String token) {
@@ -40,9 +32,9 @@ public class MessageUtil {
     }
 
     public static Message jsonToMessage(JSONObject json) {
-        Object id = json.get(ID);
-        Object author = json.get(AUTHOR);
-        Object text = json.get(TEXT);
+        Object id = json.get("id");
+        Object author = json.get("author");
+        Object text = json.get("text");
         String date = simpleDateFormat.format(new Date());
 
         if (id != null && author != null && text != null) {

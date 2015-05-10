@@ -52,24 +52,6 @@ public class Message {
         this.author = author;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if(!(obj instanceof Message))
-            return false;
-        Message other = (Message) obj;
-        if (!id.equals(other.getId()))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode(){
-        return id.hashCode();
-    }
     public String toString() {
         return "{\"id\":\"" + this.id + "\",\"author\":\"" + this.author + "\",\"text\":\"" + this.text + "\"}";
     }
