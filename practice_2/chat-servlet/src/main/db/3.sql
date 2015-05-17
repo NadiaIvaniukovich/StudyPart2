@@ -1,0 +1,2 @@
+SELECT * FROM messages WHERE user_id=2
+AND date BETWEEN '2015-05-02 00:00:00' AND '2015-05-02 23:59:59'
