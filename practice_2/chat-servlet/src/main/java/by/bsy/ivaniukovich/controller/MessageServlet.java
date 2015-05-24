@@ -1,5 +1,7 @@
 package by.bsy.ivaniukovich.controller;
 
+import by.bsy.ivaniukovich.dao.MessageDBStorage;
+import by.bsy.ivaniukovich.dao.MessageDao;
 import by.bsy.ivaniukovich.parse.MessageDOMParser;
 import org.apache.log4j.Logger;
 import by.bsy.ivaniukovich.model.Message;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import static by.bsy.ivaniukovich.util.MessageUtil.*;
 
@@ -26,6 +29,7 @@ public class MessageServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static Logger logger = Logger.getLogger(MessageServlet.class.getName());
     private static MessageDOMParser domParser = new MessageDOMParser();
+    private static MessageDao messageDao = new MessageDBStorage();
 
     @Override
     public void init() throws ServletException {
@@ -43,7 +47,7 @@ public class MessageServlet extends HttpServlet {
             //logger.debug("Index " + index);
 
             try {
-                if(index < domParser.size()){
+                if(index < messageDao.getNumberOfMessages()){
                     String messages = null;
                     try {
                         messages = formResponse(index);
@@ -74,7 +78,8 @@ public class MessageServlet extends HttpServlet {
         try {
             JSONObject json = stringToJson(data);
             Message message = jsonToMessage(json);
-            domParser.write(message);
+            //domParser.write(message);
+            messageDao.addMessage(message);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (ParseException e) {
             logger.error(e);
@@ -92,7 +97,8 @@ public class MessageServlet extends HttpServlet {
         try {
             JSONObject json = stringToJson(data);
             Message message = jsonToMessage(json);
-            domParser.changeMessage(message);
+            //domParser.changeMessage(message);
+            messageDao.updateMessage(message);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (ParseException e) {
             logger.error(e);
@@ -109,7 +115,8 @@ public class MessageServlet extends HttpServlet {
         try {
             JSONObject json = stringToJson(data);
             Message message = jsonToMessage(json);
-            domParser.deleteMessage(message);
+            //domParser.deleteMessage(message);
+            messageDao.deleteMessage(message);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (ParseException e) {
             logger.error(e);
@@ -133,8 +140,8 @@ public class MessageServlet extends HttpServlet {
         JSONObject jsonObject = new JSONObject();
         //if (index < domParser.size()) {
             // new message added
-            jsonObject.put("messages", domParser.parse(index));
-            jsonObject.put("token", getToken(domParser.size()));
+            jsonObject.put("messages", messageDao.selectMessages(index));
+            jsonObject.put("token", getToken(messageDao.getNumberOfMessages()));
         //} else {
             // message was removed, tell client to reload whole list
             //jsonObject.put("invalidateToken", true);
@@ -144,7 +151,12 @@ public class MessageServlet extends HttpServlet {
 
     private void addStubData(){
         try {
-            domParser.parse(0);
+            //domParser.parse(0);
+            List<Message> messages = messageDao.selectMessages(0);
+            for(int i = 0; i < messages.size(); i++){
+                Message message = messages.get(i);
+                System.out.println(message.getDate() + " " + message.getAuthor() + " : " + message.getText());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
